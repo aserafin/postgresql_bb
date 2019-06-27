@@ -1,9 +1,14 @@
 -- to calculate running total for each day we need to use window functions
 
--- since we want to have runnig total until the current row we need to order by date 
--- and take into account rows with unbound preceding and the current row
+-- first we will group the data by day to get sum of sales for each day
 
--- as a result of the query in the total column we will see 600 for every day of the month (except the last 2) and in running total we will see sum up until the current row
+-- next we will use window function to sum sales up to the current day
+-- using the rows between unbounded preceding and current row directive
+-- in the window declaration
+
+-- as a result of the query in the total column we will see 600 for every day of
+-- the month (except the last 2) and in running total we will see sum up until
+-- the current row
 
 with intervals as (
   select start, start + interval '1 day' as end
