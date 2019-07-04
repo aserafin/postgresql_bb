@@ -1,34 +1,23 @@
-drop table if exists contractors;
-drop table if exists employees;
-drop table if exists users;
+drop table contractors;
+drop table employees;
 
-create table users (
+create table employees (
   name varchar,
   email varchar
 );
 
-create table employees (
-  bank_id integer
-) inherits (users);
-
-insert into employees values('Xavi Caballe', 'xavi@whitespectre.com', 1);
-
-select * from employees;
-
-select * from users;
-
 create table contractors (
-  invoice_prefix varchar,
-  beneficiary_name varchar,
-  beneficiary_address varchar
+  invoice_prefix varchar
 ) inherits (employees);
 
-insert into contractors values('Adrian Serafin', 'adrians@whitespectre.com', 1, 'AS', 'SOFTMAD', 'POLAND')
+truncate employees; truncate contractors;
 
-select * from contractors;
+insert into employees values ('Jonh Employee', 'employee@example.com');
+insert into contractors values('John Contractor', 'contractor@example.com', 'C');
 
-select * from users;
 
 select * from employees;
+
+select * from contractors;
 
 select * from only employees;
