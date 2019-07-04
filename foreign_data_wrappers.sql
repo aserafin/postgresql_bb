@@ -19,7 +19,7 @@ SERVER local_mysql_server
 select * from mysql_users;
 
 -- we can insert data into foreign tables
-insert into mysql_users values('Xavi Caballe', 'xavi@whitespectre.com');
+insert into mysql_users values('John Smith', 'smith@example.com');
 
 -- we can even perform joins with local postgresql tables and remote mysql tables
 select * from mysql_users, users where mysql_users.email = users.email;
