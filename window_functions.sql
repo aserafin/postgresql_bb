@@ -1,31 +1,27 @@
--- to calculate running total for each day we need to use window functions
+drop table participants;
 
--- first we will group the data by day to get sum of sales for each day
+create table participants (
+  name varchar,
+  finished_at timestamp with time zone,
+  age_category varchar  
+);
 
--- next we will use window function to sum sales up to the current day
--- using the rows between unbounded preceding and current row directive
--- in the window declaration
+truncate participants;
 
--- as a result of the query in the total column we will see 600 for every day of
--- the month (except the last 2) and in running total we will see sum up until
--- the current row
+insert into participants values ('John', '2019-01-01 8:00:12', 'kids');
+insert into participants values ('Robert', '2019-01-01 8:05:12', 'kids');
 
-with intervals as (
-  select start, start + interval '1 day' as end
-  from generate_series('2018-10-01', '2018-10-31', interval '1 day') as start
-),
-sales_grouped_by_day as (
-  select intervals.start, coalesce(sum(quantity * price), 0) as total
-  from intervals left join sales s on (
-    s.sku_code = 'A001'
-    and s.date >= intervals.start
-    and s.date < intervals.end
-  )
-  group by intervals.start
+insert into participants values ('Jane', '2019-01-01 8:01:12', 'adults');
+insert into participants values ('Jennifer', '2019-01-01 8:01:15', 'adults');
+
+with ranked_participants as (
+  select
+    name, 
+    finished_at,
+    age_category,
+    rank() over w
+  from 
+    participants
+  window w as (partition by age_category order by finished_at asc)
 )
-select
-  sales_grouped_by_day.start, 
-  total,
-  sum(total) over (order by start asc rows between unbounded preceding and current row) as running_total
-from
-  sales_grouped_by_day
+select * from ranked_participants where rank = 1;
